@@ -14,6 +14,20 @@ def koch(order, size):
         koch(order-1, size/3)
 
 
+def branch(order, size):
+    if order == 0:
+        forward(size)
+
+    x = size / (n + 1)
+    for i in range(order):
+        forward(x)
+        lt(45)
+        branch(order - i - 1, 0.5 * x * (order - i - 1))
+        lt(90)
+        branch(order - i - 1, 0.5 * x * (order - i - 1))
+        rt(135)
+
+
 
 def snowflake_koch(order, size) -> None:
     '''
@@ -65,7 +79,7 @@ def draw_tree(depth: int, size: float, angle: float) -> None:
     backward(size)
 
 
-def square_fractal(size, depth):
+def square_fractal(depth, size):
     """
     Recursively draws a fractal square.
 
@@ -81,10 +95,10 @@ def square_fractal(size, depth):
         return
 
     for _ in range(4):
-        turtle.forward(size)
-        turtle.right(90)
-    turtle.forward(size * 0.1)
-    turtle.right(10)
+        forward(size)
+        right(90)
+    forward(size * 0.1)
+    right(10)
     square_fractal(size * 0.9, depth - 1)
 
 
@@ -107,6 +121,34 @@ def ice_1(dpth, size) -> None:
         ice_1(dpth - 1, size / 4)
         left(90)
         ice_1(dpth - 1, size / 2)
+
+
+def minkowski(order, size):
+    """
+    Recursively draw the Minkowski curve.
+
+    :param t: turtle object for drawing
+    :param length: current segment length
+    :param depth: recursion depth
+    """
+    if order == 0:
+        forward(size)
+    else:
+        minkowski(order / 4, size - 1)
+        lt(90)
+        minkowski(order / 4, size - 1)
+        rt(90)
+        minkowski(order / 4, size - 1)
+        rt(90)
+        minkowski(order / 4, size - 1)
+        minkowski(order / 4, size - 1)
+        lt(90)
+        minkowski(order / 4, size - 1)
+        lt(90)
+        minkowski(order / 4, size - 1)
+        rt(90)
+        minkowski(order / 4, size - 1)
+
 
 def draw_branch(length: float):
     """
@@ -206,6 +248,32 @@ def spiral_triangle(order: int, size: float) -> None:
             pendown()
 
 
+def nastya(depth, length):
+    """
+    Построение кривой рекурсивно.
+
+    :param length: длина текущей линии.
+    :param depth: глубина рекурсии.
+    """
+    if depth == 0:
+        forward(length)
+    else:
+        length /= 4
+        left(120)
+        nastya(length, depth - 1)
+        right(60)
+        nastya(length, depth - 1)
+        right(120)
+        nastya(length, depth - 1)
+        right(60)
+        nastya(length, depth - 1)
+        nastya(length, depth - 1)
+        left(60)
+        nastya(length, depth - 1)
+        left(60)
+        nastya(length, depth - 1)
+        nastya(length, depth - 1)
+
 def main():
     fractals = {
         '1': 'Кривая Коха',
@@ -216,7 +284,11 @@ def main():
         '6': 'Снежинка Коха',
         '7': 'Квадрат',
         '8': 'Уникальный фрактал 1',
-        '9': 'Уникальный фрактал 2'
+        '9': 'Уникальный фрактал 2',
+        '10': 'Уникальный фрактал 3',
+        '11': 'Уникальный фрактал 4',
+        '12': 'Кривая Минковского',
+        '13': 'Фрактал "Ветка"'
     }
     print("Выберите фрактал:")
     for key, name in fractals.items():
@@ -232,8 +304,6 @@ def main():
 
     depth = int(input('Глубина рекурсии:'))
     length = int(input('Длина стороны:'))
-    x_coord = 0
-    y_coord = 0
     up()
 
     match choice:
@@ -307,9 +377,33 @@ def main():
             down()
             spiral_triangle(depth, length)
 
+        case '10':
+            x_coord = 0
+            y_coord = 0
+            setposition(x_coord, y_coord)
+            down()
+            nastya(depth, length)
 
+        case '11':
+            x_coord = 0
+            y_coord = 0
+            setposition(x_coord, y_coord)
+            down()
+            nastya(depth, length)
 
+        case '12':
+            x_coord = 0
+            y_coord = 0
+            setposition(x_coord, y_coord)
+            down()
+            minkowski(depth, length)
 
+        case '13':
+            x_coord = 0
+            y_coord = 0
+            setposition(x_coord, y_coord)
+            down()
+            branch(depth, length)
 
 
 
