@@ -1,36 +1,35 @@
 from turtle import *
 import math
+import local as lcl
 
-def koch(order, size):
+
+def koch(order: int, size: float) -> None:
+    """"
+    The function draws a Koch curve of a given order and size recursively.
+
+    Args:
+        order (int):  The depth of the recursion (the order of the curve).
+        if order=0 - straight line
+        size (float): Length of the current curve segment
+
+    Returns:
+        None: The function draws and does not return values.
+    """
+
     if order == 0:
         forward(size)
     else:
-        koch(order-1, size/3)
+        koch(order - 1, size / 3)
         lt(60)
-        koch(order-1, size/3)
+        koch(order - 1, size / 3)
         rt(120)
-        koch(order-1, size/3)
+        koch(order - 1, size / 3)
         lt(60)
-        koch(order-1, size/3)
-
-
-def branch(order, size):
-    if order == 0:
-        forward(size)
-
-    x = size / (n + 1)
-    for i in range(order):
-        forward(x)
-        lt(45)
-        branch(order - i - 1, 0.5 * x * (order - i - 1))
-        lt(90)
-        branch(order - i - 1, 0.5 * x * (order - i - 1))
-        rt(135)
-
+        koch(order - 1, size / 3)
 
 
 def snowflake_koch(order, size) -> None:
-    '''
+    """
     The function draws the Koch snowflake - three copies of the Koch curve,
     built (with the tips facing out) on the sides of a regular triangle.
 
@@ -40,15 +39,45 @@ def snowflake_koch(order, size) -> None:
         size (float): Length of the current curve segment
 
     Returns:
-        None: Функция выполняет отрисовку, не возвращает значений
-    '''
+        None: The function performs rendering and does not return any values
+    """
 
     for side in range(3):
         koch(order, size)
         right(120)
 
+
+def branch(order: int, size: float) -> None:
+    """
+    Recursively draws a fractal tree with decreasing branch complexity.
+
+    Args:
+        order (int): recursion depth - determines the complexity and number of branching levels
+        size (float): Length of the current curve segment
+
+    Returns:
+        None: The function only draws the tree and doesn't return any value.
+    """
+
+    if order == 0:
+        forward(size)
+        return
+
+    x = size / (order + 1)
+    for i in range(order):
+        forward(x)
+        lt(45)
+        branch(order - i - 1, 0.5 * x * (order - i - 1))
+        lt(90)
+        branch(order - i - 1, 0.5 * x * (order - i - 1))
+        rt(135)
+    forward(x)
+    lt(180)
+    forward(size)
+
+
 def draw_tree(depth: int, size: float, angle: float) -> None:
-    '''
+    """
     The function draws a colored fractal tree recursively.
 
     Args:
@@ -58,7 +87,7 @@ def draw_tree(depth: int, size: float, angle: float) -> None:
 
     Returns:
         None: The function only draws branches.
-    '''
+    """
 
     if depth == 0:
         return
@@ -79,7 +108,7 @@ def draw_tree(depth: int, size: float, angle: float) -> None:
     backward(size)
 
 
-def square_fractal(depth, size):
+def square_fractal(depth: int, size: float) -> None:
     """
     Recursively draws a fractal square.
 
@@ -96,127 +125,170 @@ def square_fractal(depth, size):
 
     for _ in range(4):
         forward(size)
-        right(90)
+        rt(90)
     forward(size * 0.1)
-    right(10)
-    square_fractal(size * 0.9, depth - 1)
+    rt(10)
+    square_fractal(depth - 1, size * 0.9)
 
 
-def ice_1(dpth, size) -> None:
+def ice_1(dpth: int, size: float) -> None:
     """
     Draws a recursive ice-like fractal.
 
     Args:
         dpth (int): The recursion depth.
         size (float): The length of the current segment.
+    Returns:
+        None: The function only draws.
     """
 
     if dpth == 0:
         forward(size)
     else:
         ice_1(dpth - 1, size / 2)
-        left(90)
+        lt(90)
         ice_1(dpth - 1, size / 4)
-        left(180)
+        lt(180)
         ice_1(dpth - 1, size / 4)
-        left(90)
+        lt(90)
         ice_1(dpth - 1, size / 2)
 
 
-def minkowski(order, size):
-    """
+def minkowski(order: int, size: float) -> None:
+    """"
     Recursively draw the Minkowski curve.
 
-    :param t: turtle object for drawing
-    :param length: current segment length
-    :param depth: recursion depth
+    Args:
+        order (int): recursion depth - determines the level of detail in the curve
+        size (float): current segment length
+
+    Returns:
+        None: The function only draws the curve and doesn't return any value.
     """
+
     if order == 0:
         forward(size)
     else:
-        minkowski(order / 4, size - 1)
+        minkowski(order - 1, size / 4)
         lt(90)
-        minkowski(order / 4, size - 1)
+        minkowski(order - 1, size / 4)
         rt(90)
-        minkowski(order / 4, size - 1)
+        minkowski(order - 1, size / 4)
         rt(90)
-        minkowski(order / 4, size - 1)
-        minkowski(order / 4, size - 1)
+        minkowski(order - 1, size / 4)
+        minkowski(order - 1, size / 4)
         lt(90)
-        minkowski(order / 4, size - 1)
+        minkowski(order - 1, size / 4)
         lt(90)
-        minkowski(order / 4, size - 1)
+        minkowski(order - 1, size / 4)
         rt(90)
-        minkowski(order / 4, size - 1)
+        minkowski(order - 1, size / 4)
 
 
-def draw_branch(length: float):
+def draw_branch(size: float) -> None:
     """
     Recursively draws a branch:
     1. Draw a line forward.
     2. Make two turns to the right and left.
-    3. Reduce the length of the branch.
+    3. Reduce the size of the branch.
     4. Stop when the branch is too short.
+
     Args:
-        length (int): First line length.
+        size (int): First line length.
 
     Returns:
         None: The function only draws a branches.
     """
 
-    if length < 5:
+    if size < 5:
         return
 
-    turtle.forward(length)
+    forward(size)
 
-    turtle.right(30)
-    draw_branch(length * 0.7)
+    rt(30)
+    draw_branch(size * 0.7)
 
-    turtle.left(60)
-    draw_branch(length * 0.7)
+    lt(60)
+    draw_branch(size * 0.7)
 
-    turtle.right(30)
-    turtle.backward(length)
+    rt(30)
+    backward(size)
 
-def ice_2(order, size):
+
+def ice_2(order: int, size: float) -> None:
+    """
+    Recursively draws the Ice #2 fractal pattern.
+
+    Args:
+        order (int): recursion depth - determines the level of fractal detail
+        size (float): current segment length
+
+    Returns:
+        None: The function only draws the fractal and doesn't return.
+    """
+
     if order == 0:
         forward(size)
     else:
-        ice_2(order-1, size)
+        ice_2(order - 1, size)
         for _ in range(2):
-          lt(120)
-          ice_2(order-1, size/2)
-          rt(180)
-          ice_2(order-1, size/2)
+            lt(120)
+            ice_2(order - 1, size / 2)
+            rt(180)
+            ice_2(order - 1, size / 2)
+
         lt(120)
-        ice_2(order-1, size)
+        ice_2(order - 1, size)
 
 
-def levi(order, size):
+def levi(order: int, size: float) -> None:
+    """
+    Recursively draws the Levi C curve fractal.
+
+    Args:
+        order (int): recursion depth - determines the complexity of the curve
+        size (float): current segment length
+
+    Returns:
+        None: The function only draws the curve and doesn't return.
+    """
+
     if order == 0:
         forward(size)
     else:
         lt(45)
-        levi(order-1, size / (2 ** 0.5))
+        levi(order - 1, size / (2 ** 0.5))
         rt(90)
         levi(order - 1, size / 2 ** 0.5)
         lt(45)
 
-def k_fractal(order, size):
+
+def k_fractal(order: int, size: float) -> None:
+    """
+    Recursively draws a K-shaped fractal pattern.
+
+    Args:
+        order (int): recursion depth - determines the level of detail in the K pattern
+        size (float): current segment length
+
+    Returns:
+        None: The function only draws the fractal and doesn't return.
+    """
+
     if order == 0:
         forward(size)
     else:
 
         lt(90)
-        k_fractal(order - 1, 2 * size/ 5)
+        k_fractal(order - 1, 2 * size / 5)
         rt(135)
-        k_fractal(order - 1, (2 * size/ 5) * (2 ** 0.5))
+        k_fractal(order - 1, (2 * size / 5) * (2 ** 0.5))
         lt(45)
         k_fractal(order - 1, size / 5)
         lt(45)
-        k_fractal(order - 1, (2 * size/ 5) * (2 ** 0.5))
+        k_fractal(order - 1, (2 * size / 5) * (2 ** 0.5))
         rt(135)
-        k_fractal(order - 1, 2 * size/ 5)
+        k_fractal(order - 1, 2 * size / 5)
         lt(90)
 
 
@@ -227,6 +299,9 @@ def spiral_triangle(order: int, size: float) -> None:
     Args:
         order (int): Recursion depth.
         size (float): Length of the triangle side.
+
+    Returns:
+        None: The function only draws the fractal and doesn't return.
     """
 
     if order == 0:
@@ -248,65 +323,135 @@ def spiral_triangle(order: int, size: float) -> None:
             pendown()
 
 
-def nastya(depth, length):
+def nastya(order: int, size: float) -> None:
     """
-    Построение кривой рекурсивно.
+    Recursively draws the Nastya fractal curve.
 
-    :param length: длина текущей линии.
-    :param depth: глубина рекурсии.
+    Args:
+        order (int): recursion depth - determines the level of detail in the curve
+        size (float): current segment size
+
+    Returns:
+        None: The function only draws the curve and doesn't return any value.
     """
-    if depth == 0:
-        forward(length)
+
+    if order == 0:
+        forward(size)
     else:
-        length /= 4
-        left(120)
-        nastya(length, depth - 1)
-        right(60)
-        nastya(length, depth - 1)
-        right(120)
-        nastya(length, depth - 1)
-        right(60)
-        nastya(length, depth - 1)
-        nastya(length, depth - 1)
-        left(60)
-        nastya(length, depth - 1)
-        left(60)
-        nastya(length, depth - 1)
-        nastya(length, depth - 1)
 
-def main():
+        lt(120)
+        nastya(order - 1, size/4)
+
+        rt(60)
+        nastya(order - 1, size/4)
+
+        rt(120)
+        nastya(order - 1, size/4)
+
+        rt(60)
+        nastya(order - 1, size/4)
+
+        nastya(order - 1, size/4)
+
+        lt(60)
+        nastya(order - 1, size/4)
+
+        lt(60)
+        nastya(order - 1, size/4)
+
+        nastya(order - 1, size/4)
+
+
+def fractal_line(order: int, size: float) -> None:
+    """
+    Recursively draws a fractal curve based on the Koch curve.
+
+    Args:
+        order (int): Recursion level (0 is a straight line)
+        size (float): The length of the curve segment
+
+    Returns:
+        None: The function only draws the fractal and doesn't return.
+    """
+
+    if order == 0:
+        forward(size)
+    else:
+        fractal_line(order - 1, size / 2)
+        left(120)
+        fractal_line(order - 1, size / 2)
+        right(60)
+        fractal_line(order - 1, size / 2)
+        left(120)
+        fractal_line(order - 1, size / 2)
+
+
+def spiral_composition(depth, length) -> None:
+    """"
+    Draws a spiral composition of fractal curves.
+
+    Args:
+        depth (int): The level of recursion for fractals
+        length (float): The base length of the segment
+    Returns:
+        None: The function draws and does not return values.
+    """
+
+    for ray_ind in range(6):
+        up()
+        goto(0, 0)
+
+        spiral_offset = ray_ind * 15
+        setheading(ray_ind * 45 + spiral_offset)
+        down()
+
+        current_size = length * (0.8 - ray_ind * 0.08)
+
+        for fractal_small in range(2):
+            fractal_line(depth, current_size / (fractal_small + 1))
+            right(120 + ray_ind * 5)
+
+
+def main() -> None:
+    """
+    The main function of the program.
+    Requests parameters from the user and initiates drawing fractals
+    """
+
     fractals = {
-        '1': 'Кривая Коха',
-        '2': 'Ледяной 1',
-        '3': 'Ледяной 2',
-        '4': 'Кривая Леви',
-        '5': 'Двоичное дерево',
-        '6': 'Снежинка Коха',
-        '7': 'Квадрат',
-        '8': 'Уникальный фрактал 1',
-        '9': 'Уникальный фрактал 2',
-        '10': 'Уникальный фрактал 3',
-        '11': 'Уникальный фрактал 4',
-        '12': 'Кривая Минковского',
-        '13': 'Фрактал "Ветка"'
+        '1': f'{lcl.KOCH_CURVE}',
+        '2': f'{lcl.ICY_1}',
+        '3': f'{lcl.ICY_2}',
+        '4': f'{lcl.LEVY_CURVE}',
+        '5': f'{lcl.BINARY_TREE}',
+        '6': f'{lcl.KOCH_SNOWFLAKE}',
+        '7': f'{lcl.SQUARE}',
+        '8': f'{lcl.UNIQUE_FRACTAL_1}',
+        '9': f'{lcl.UNIQUE_FRACTAL_2}',
+        '10': f'{lcl.UNIQUE_FRACTAL_3}',
+        '11': f'{lcl.UNIQUE_FRACTAL_4}',
+        '12': f'{lcl.MINKOWSKI_CURVE}',
+        '13': f'{lcl.FRACTAL_BRANCH}'
     }
-    print("Выберите фрактал:")
+    print(f'{lcl.SELECT_FRACTAL}')
     for key, name in fractals.items():
         print(f"{key}. {name}")
 
-    choice = input("Введите номер (1-4): ").strip()
+    choice = input(f'{lcl.ENTER_NUMBER} (1-13): ').strip()
 
-    if choice in fractals:
-        pass
-    else:
-        print("Некорректный ввод.")
+    if choice not in fractals:
+        print(f'{lcl.INCORRECT_INPUT}')
         exit()
 
-    depth = int(input('Глубина рекурсии:'))
-    length = int(input('Длина стороны:'))
+    if choice == '11':
+        depth = int(input(f'{lcl.DEPTH_OF_RECURSION} (1-3): '))
+        length = int(input(f'{lcl.SIDE_LENGTH} (70-180): '))
+    else:
+        depth = int(input(f'{lcl.DEPTH_OF_RECURSION}'))
+        length = int(input(f'{lcl.SIDE_LENGTH}'))
     up()
-
-    match choice:
+    try:
+      match choice:
         case '1':
             x_coord = -length // 2
             y_coord = 0
@@ -337,9 +482,9 @@ def main():
 
         case '5':
             try:
-              angle = int(input('Угол ветвления:'))
+                angle = int(input(f'{lcl.BRANCHING_ANGLE}'))
             except ValueError:
-              print("неправильно введён угол")
+                print(f'{lcl.CORNER_IS_INCORRECTLY_ENTERED}')
             x_coord = 0
             y_coord = 0
             setposition(x_coord, y_coord)
@@ -389,7 +534,7 @@ def main():
             y_coord = 0
             setposition(x_coord, y_coord)
             down()
-            nastya(depth, length)
+            spiral_composition(depth, length)
 
         case '12':
             x_coord = 0
@@ -402,13 +547,13 @@ def main():
             x_coord = 0
             y_coord = 0
             setposition(x_coord, y_coord)
+            left(90)
             down()
             branch(depth, length)
-
-
-
-    update()
-    done()
+      update()
+      done()
+    except RecursionError:
+        print(f'{lcl.RECURSION_ERROR}')
 
 if __name__ == "__main__":
     main()
